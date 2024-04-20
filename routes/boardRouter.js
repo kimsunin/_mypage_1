@@ -44,6 +44,16 @@ async function searchDetail(req, res) {
   }
 }
 
+async function getHome(req, res) {
+  try {
+    const result = await Board.aggregate([{ $sample: { size: 1 } }]);
+    console.log(result);
+    return res.json(result);
+  } catch (err) {
+    return res.json({ message: { err } });
+  }
+}
+
 async function deleteBoard(req, res) {
   try {
     await Board.deleteOne({ _id: req.params.id });
@@ -56,6 +66,7 @@ async function editBoard(req, res) {
   console.log("수정합니다");
 }
 boardRouter.get("/", getBoard);
+boardRouter.get("/home", getHome);
 boardRouter.post("/update", postUpdate);
 boardRouter.post("/write", postWrite);
 boardRouter.post("/detail", postDetail);

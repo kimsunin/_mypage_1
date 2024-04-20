@@ -1,5 +1,6 @@
 import axios from "axios";
-import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import "./Home.css";
 import homeSvg from "../svg/home.svg";
 import searchSvg from "../svg/search.svg";
@@ -16,7 +17,7 @@ export default function Topmenu() {
       headers,
       detail: searchDeail,
     };
-    const response = await axios
+    await axios
       .post("http://www.localhost:4000/board/search", send_param)
       .then((returnData) => {
         if (returnData.data.message) {
@@ -82,6 +83,21 @@ export default function Topmenu() {
     </nav>
   );
 }
+
 export function HomeContent() {
-  return <h2>Homepage</h2>;
+  const [title1, setTitle1] = useState();
+
+  async function getHome() {
+    try {
+      const response = await axios.get("http://www.localhost:4000/board/home");
+      setTitle1(response.data);
+    } catch (err) {
+      return <h1>err</h1>;
+    }
+  }
+  useEffect(() => {
+    getHome();
+  }, []);
+  console.log(title1);
+  return <h1>Homepage</h1>;
 }
